@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/0 - Global/">
+    <Project Path="AppProject.Utils/AppProject.Utils.csproj" />
+  </Folder>
+  <Folder Name="/1 - Backend/" />
+  <Folder Name="/2 - Frontend/" />
+  <Folder Name="/3 - Tests/" />
+</Solution>
