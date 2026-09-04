@@ -4,4 +4,17 @@
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.19" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\AppProject.Core.Contracts\AppProject.Core.Contracts.csproj" />
+    <ProjectReference Include="..\AppProject.Core.Controllers.General\AppProject.Core.Controllers.General.csproj" />
+    <ProjectReference Include="..\AppProject.Core.Infrastructure.AI\AppProject.Core.Infrastructure.AI.csproj" />
+    <ProjectReference Include="..\AppProject.Core.Infrastructure.Database\AppProject.Core.Infrastructure.Database.csproj" />
+    <ProjectReference Include="..\AppProject.Core.Infrastructure.Email\AppProject.Core.Infrastructure.Email.csproj" />
+    <ProjectReference Include="..\AppProject.Core.Infrastructure.Jobs\AppProject.Core.Infrastructure.Jobs.csproj" />
+    <ProjectReference Include="..\AppProject.Core.Services.General\AppProject.Core.Services.General.csproj" />
+    <ProjectReference Include="..\AppProject.Core.Services\AppProject.Core.Services.csproj" />
+    <ProjectReference Include="..\AppProject.Resources\AppProject.Resources.csproj" />
+    <ProjectReference Include="..\AppProject.Utils\AppProject.Utils.csproj" />
+  </ItemGroup>
+
 </Project>

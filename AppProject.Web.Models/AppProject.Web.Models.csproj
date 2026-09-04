@@ -1,3 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
+  <ItemGroup>
+    <ProjectReference Include="..\AppProject.Models\AppProject.Models.csproj" />
+    <ProjectReference Include="..\AppProject.Utils\AppProject.Utils.csproj" />
+  </ItemGroup>
 </Project>
