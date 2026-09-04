@@ -1,6 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
@@ -13,8 +17,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AppProject.Core.API\AppProject.Core.API.csproj" />
     <ProjectReference Include="..\AppProject.Utils\AppProject.Utils.csproj" />
+    <ProjectReference Include="..\AppProject.Web.Tests\AppProject.Web.Tests.csproj" />
   </ItemGroup>
 
   <ItemGroup>
