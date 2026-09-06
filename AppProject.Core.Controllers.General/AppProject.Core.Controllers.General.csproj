@@ -5,4 +5,8 @@
     <ProjectReference Include="..\AppProject.Core.Services.General\AppProject.Core.Services.General.csproj" />
     <ProjectReference Include="..\AppProject.Utils\AppProject.Utils.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
 </Project>
