@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Reflection;
 using Microsoft.AspNetCore.Localization;
 
@@ -13,11 +14,15 @@ public static class Bootstrap
 
         ConfigureControllers(mvcBuilder);
 
+        ConfigureLocalization(builder, mvcBuilder);
+
         return builder;
     }
 
     public static WebApplication UseApiPipeline(this WebApplication app)
     {
+        app.UseRequestLocalization();
+
         // ambiente de desenvolvimento
         if (app.Environment.IsDevelopment())
         {
@@ -45,8 +50,7 @@ public static class Bootstrap
 
         builder.Services.Configure<RequestLocalizationOptions>(options =>
         {
-            var supportedCultures = new[] {"en-US", "pt-BR", "es-ES"};
-
+            var supportedCultures = new[]{"en-US", "pt-BR", "es-ES"};
             options.DefaultRequestCulture = new RequestCulture("en-US");
             options.SupportedCultures = supportedCultures.Select(c => new CultureInfo(c)).ToList();
             options.SupportedUICultures = supportedCultures.Select(c => new CultureInfo(c)).ToList();
