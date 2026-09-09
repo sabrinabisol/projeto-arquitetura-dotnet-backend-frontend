@@ -2,6 +2,9 @@ namespace AppProject.Exceptions;
 
 public enum ExceptionCode
 {
-    Country_DuplicateName,
-
+    Generic,
+    SecurityValidation,
+    RequestValidation,
+    Concurrency,
+    EntityNotFound,
 }
