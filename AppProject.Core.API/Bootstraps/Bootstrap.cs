@@ -1,7 +1,10 @@
 using System;
 using System.Globalization;
 using System.Reflection;
+using AppProject.Core.API.Middleware;
+using AppProject.Exceptions;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AppProject.Core.API.Bootstraps;
 
@@ -16,6 +19,11 @@ public static class Bootstrap
 
         ConfigureLocalization(builder, mvcBuilder);
 
+        builder.Services.Configure<ApiBehaviorOptions>(options =>
+        {
+            ConfigureValidation(options);
+        });
+
         return builder;
     }
 
@@ -28,6 +36,8 @@ public static class Bootstrap
         {
             app.MapOpenApi();
         }
+
+        app.UseMiddleware<ExceptionMiddleware>();
 
         app.UseHttpsRedirection();
 
@@ -61,6 +71,19 @@ public static class Bootstrap
                 new AcceptLanguageHeaderRequestCultureProvider()
             };
         });
+    }
+
+    private static void ConfigureValidation(ApiBehaviorOptions options)
+    {
+        options.InvalidModelStateResponseFactory = context =>
+        {
+            var modelErrors = context.ModelState
+                .Where(e => e.Value?.Errors.Count > 0)
+                .Select(e => e.Value!.Errors.Select(er => er.ErrorMessage));
+
+            var errors = modelErrors.Any() ? string.Join(" ", modelErrors) : null;
+            throw new AppException(ExceptionCode.RequestValidation, errors);
+        };
     }
 
     private static IEnumerable<Assembly> GetControllersAssemblies() =>

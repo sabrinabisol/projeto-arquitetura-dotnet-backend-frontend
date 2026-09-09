@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <Folder Include="Bootstraps\" />
+    <Folder Include="Middleware\" />
   </ItemGroup>
 
 </Project>

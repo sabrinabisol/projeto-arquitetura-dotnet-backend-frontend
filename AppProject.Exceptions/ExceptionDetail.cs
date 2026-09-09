@@ -7,4 +7,6 @@ public class ExceptionDetail
     public ExceptionCode Code { get; set; }
 
     public string? AdditionalInfo { get; set; }
+
+    public ExceptionCode ExceptionCode { get; set; }
 }

@@ -2,4 +2,7 @@
   <ItemGroup>
     <ProjectReference Include="..\AppProject.Utils\AppProject.Utils.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="CustomValidators\" />
+  </ItemGroup>
 </Project>
