@@ -7,4 +7,8 @@
     <ProjectReference Include="..\AppProject.Resources\AppProject.Resources.csproj" />
     <ProjectReference Include="..\AppProject.Utils\AppProject.Utils.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.20" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.20" />
+  </ItemGroup>
 </Project>
