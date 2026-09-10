@@ -13,5 +13,4 @@ public class SampleDto : IEntity
     public string Name { get; set; } = default!;
 
     public byte[]? RowVersion { get; set; }
-
 }

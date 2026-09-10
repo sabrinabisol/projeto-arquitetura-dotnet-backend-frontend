@@ -30,6 +30,7 @@ public sealed class RequiredGuidAttribute : RequiredAttribute
             {
                 return false;
             }
+
             guidValue = nullableGuid.Value;
         }
         else if (value is string stringValue && Guid.TryParse(stringValue, out var parsedGuid))
@@ -45,5 +46,4 @@ public sealed class RequiredGuidAttribute : RequiredAttribute
           ? false
           : true;
     }
-
 }

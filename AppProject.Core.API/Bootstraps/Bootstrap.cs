@@ -1,7 +1,9 @@
 using System;
 using System.Globalization;
 using System.Reflection;
+using AppProject.Core.API.Auth;
 using AppProject.Core.API.Middleware;
+using AppProject.Core.Contracts;
 using AppProject.Core.Services;
 using AppProject.Exceptions;
 using Microsoft.AspNetCore.Localization;
@@ -27,6 +29,8 @@ public static class Bootstrap
 
         ConfigureServices(builder);
 
+        ConfigureUsers(builder);
+
         return builder;
     }
 
@@ -49,12 +53,9 @@ public static class Bootstrap
         return app;
     }
 
-    private static void ConfigureControllers(IMvcBuilder mvcBuilder)
+    public static void ConfigureUsers(WebApplicationBuilder builder)
     {
-        foreach (var assembly in GetControllersAssemblies())
-        {
-            mvcBuilder.AddApplicationPart(assembly);
-        }
+        builder.Services.AddScoped<IUserContext, UserContext>();
     }
 
     public static void ConfigureLocalization(WebApplicationBuilder builder, IMvcBuilder mvcBuilder)
@@ -63,7 +64,7 @@ public static class Bootstrap
 
         builder.Services.Configure<RequestLocalizationOptions>(options =>
         {
-            var supportedCultures = new[]{"en-US", "pt-BR", "es-ES"};
+            var supportedCultures = new[] { "en-US", "pt-BR", "es-ES" };
             options.DefaultRequestCulture = new RequestCulture("en-US");
             options.SupportedCultures = supportedCultures.Select(c => new CultureInfo(c)).ToList();
             options.SupportedUICultures = supportedCultures.Select(c => new CultureInfo(c)).ToList();
@@ -74,6 +75,14 @@ public static class Bootstrap
                 new AcceptLanguageHeaderRequestCultureProvider()
             };
         });
+    }
+
+    private static void ConfigureControllers(IMvcBuilder mvcBuilder)
+    {
+        foreach (var assembly in GetControllersAssemblies())
+        {
+            mvcBuilder.AddApplicationPart(assembly);
+        }
     }
 
     private static void ConfigureValidation(ApiBehaviorOptions options)
