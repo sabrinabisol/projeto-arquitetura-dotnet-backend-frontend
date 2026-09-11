@@ -15,5 +15,6 @@
   <ItemGroup>
     <Folder Include="Entities\" />
     <Folder Include="EntityTypeConfiguration\" />
+    <Folder Include="Mapper\" />
   </ItemGroup>
 </Project>

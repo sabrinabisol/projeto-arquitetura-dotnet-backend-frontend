@@ -6,6 +6,8 @@ builder.AddApiServices();
 
 var app = builder.Build();
 
+await app.InitializeDatabaseAsync();
+
 app.UseApiPipeline();
 
 app.Run();
