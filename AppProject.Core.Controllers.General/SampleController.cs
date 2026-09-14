@@ -2,6 +2,7 @@ using AppProject.Core.Models.General;
 using AppProject.Exceptions;
 using AppProject.Models;
 using AppProject.Resources;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -34,5 +35,13 @@ namespace AppProject.Core.Controllers.General
         {
             return this.Ok(request);
         }
+
+        [Authorize]
+        [HttpGet]
+        public IActionResult GetProtectedData()
+        {
+            return this.Ok("This is a protected Data");
+        }
+
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Globalization;
 using System.Reflection;
+using System.Security.Claims;
 using AppProject.Core.API.Auth;
 using AppProject.Core.API.Middleware;
 using AppProject.Core.Contracts;
@@ -9,6 +10,7 @@ using AppProject.Core.Infrastructure.Database.Mapper;
 using AppProject.Core.Services;
 using AppProject.Exceptions;
 using Mapster;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -39,6 +41,8 @@ public static class Bootstrap
 
         ConfigureDatabase(builder);
 
+        ConfigureAuthentication(builder);
+
         return builder;
     }
 
@@ -55,6 +59,9 @@ public static class Bootstrap
         app.UseMiddleware<ExceptionMiddleware>();
 
         app.UseHttpsRedirection();
+
+        app.UseAuthentication();
+        app.UseAuthorization();
 
         app.MapControllers();
 
@@ -181,6 +188,43 @@ public static class Bootstrap
             .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking));
     }
 
+    private static void ConfigureAuthentication(WebApplicationBuilder builder)
+    {
+        builder.Services.AddAuthorization();
+
+        var auth0Options = new Auth0Options();
+        builder.Configuration.GetSection("Auth0").Bind(auth0Options);
+
+        var authority = auth0Options.Authority;
+        var audience = auth0Options.Audience;
+
+        if (string.IsNullOrWhiteSpace(authority) || string.IsNullOrWhiteSpace(audience))
+        {
+            throw new ArgumentException("Auth0 configuration is not set properly");
+        }
+
+        builder.Services.AddAuthentication(options =>
+        {
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        })
+        .AddJwtBearer(options =>
+        {
+            options.Authority = authority;
+            options.Audience = audience;
+
+            options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidIssuer = authority,
+                ValidateAudience = true,
+                ValidAudience = audience,
+                ValidateLifetime = true,
+                NameClaimType = ClaimTypes.NameIdentifier
+            };
+        });
+    }
+
     private static IEnumerable<Assembly> GetControllersAssemblies() =>
         [
           Assembly.Load("AppProject.Core.Controllers.General"),
@@ -195,5 +239,14 @@ public static class Bootstrap
     private class ConnectionStringsOptions
     {
         public string? DatabaseConnection { get; set; }
+    }
+
+    private class Auth0Options
+    {
+        public string? Authority { get; set; }
+
+        public string? ClientId { get; set; }
+
+        public string? Audience { get; set; }
     }
 }
