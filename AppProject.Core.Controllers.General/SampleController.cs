@@ -42,6 +42,5 @@ namespace AppProject.Core.Controllers.General
         {
             return this.Ok("This is a protected Data");
         }
-
     }
 }

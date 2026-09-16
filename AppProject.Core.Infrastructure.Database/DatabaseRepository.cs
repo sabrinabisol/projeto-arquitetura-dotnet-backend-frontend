@@ -9,8 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 
 namespace AppProject.Core.Infrastructure.Database;
 
-public class DatabaseRepository(
-    ApplicationDbContext applicationDbContext,
+public class DatabaseRepository(ApplicationDbContext applicationDbContext,
     IUserContext userContext,
     TypeAdapterConfig typeAdapterConfig) : IDatabaseRepository
 {
