@@ -153,6 +153,8 @@ public static class Bootstrap
     public static void ConfigureUsers(WebApplicationBuilder builder)
     {
         builder.Services.AddScoped<IUserContext, UserContext>();
+
+        builder.Services.AddHttpContextAccessor();
     }
 
     public static void ConfigureLocalization(WebApplicationBuilder builder, IMvcBuilder mvcBuilder)
