@@ -1,3 +1,4 @@
+using AppProject.Core.Contracts;
 using AppProject.Core.Models.General;
 using AppProject.Exceptions;
 using AppProject.Models;
@@ -10,7 +11,9 @@ namespace AppProject.Core.Controllers.General
 {
     [Route("api/general/[controller]/[action]")]
     [ApiController]
-    public class SampleController : ControllerBase
+    public class SampleController(
+        IUserContext userContext)
+        : ControllerBase
     {
         [HttpGet]
         public IActionResult GetSample()
@@ -41,6 +44,19 @@ namespace AppProject.Core.Controllers.General
         public IActionResult GetProtectedData()
         {
             return this.Ok("This is a protected Data");
+        }
+
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> GetCurrentUserEmailAsync(CancellationToken cancellationToken = default)
+        {
+            var currentUser = await userContext.GetCurrentUserAsync(cancellationToken);
+            var systemAdminUser = await userContext.GetSystemAdminUserAsync(cancellationToken);
+
+            var message = $"Current user email: {currentUser.Email}. " +
+                          $"System admin user email: {systemAdminUser.Email}";
+
+            return this.Ok(message);
         }
     }
 }
