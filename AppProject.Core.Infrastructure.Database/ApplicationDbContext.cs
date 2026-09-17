@@ -1,4 +1,5 @@
 using System;
+using AppProject.Core.Infrastructure.Database.Entities.Auth;
 using Microsoft.EntityFrameworkCore;
 
 namespace AppProject.Core.Infrastructure.Database;
@@ -11,6 +12,9 @@ public class ApplicationDbContext : DbContext
     }
 
     // DbSets for your entities - quais classes que devem representar uma tabela no banco de dados
+
+    public DbSet<TbUser> Users { get; set; } = default!;
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
