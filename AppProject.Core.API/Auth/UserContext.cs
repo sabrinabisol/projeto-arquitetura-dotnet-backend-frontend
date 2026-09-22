@@ -4,13 +4,15 @@ using AppProject.Core.Contracts;
 using AppProject.Core.Infrastructure.Database;
 using AppProject.Core.Infrastructure.Database.Entities.Auth;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Identity.Client;
 
 namespace AppProject.Core.API.Auth;
 
 public class UserContext(
     IHttpContextAccessor httpContextAccessor,
-    ApplicationDbContext applicationDbContext)
+    ApplicationDbContext applicationDbContext,
+    HybridCache hybridCache)
     : IUserContext
 {
     private UserInfo? currentUser;
@@ -93,19 +95,29 @@ public class UserContext(
 
     public async Task<UserInfo> GetSystemAdminUserAsync(CancellationToken cancellationToken = default)
     {
-        var user = await applicationDbContext.Users.FirstOrDefaultAsync(u => u.IsSystemAdmin, cancellationToken);
+        var cachedUser = await hybridCache.GetOrCreateAsync(
+            CacheKeys.SystemAdminUserKey,
+            async token => await GetSystemAdminUserFromDatabaseAsync(token),
+            cancellationToken: cancellationToken);
 
-        if (user is null)
+        return cachedUser;
+
+        async Task<UserInfo> GetSystemAdminUserFromDatabaseAsync(CancellationToken cancellationToken = default)
         {
-            throw new InvalidOperationException("System admin user not found");
+            var user = await applicationDbContext.Users.FirstOrDefaultAsync(u => u.IsSystemAdmin, cancellationToken);
+
+            if (user is null)
+            {
+                throw new InvalidOperationException("System admin user not found");
+            }
+
+            return new UserInfo
+            {
+                UserId = user.Id,
+                UserName = user.Name,
+                Email = user.Email,
+                IsSystemAdmin = true
+            };
         }
-
-        return new UserInfo
-        {
-            UserId = user.Id,
-            UserName = user.Name,
-            Email = user.Email,
-            IsSystemAdmin = true
-        };
     }
 }

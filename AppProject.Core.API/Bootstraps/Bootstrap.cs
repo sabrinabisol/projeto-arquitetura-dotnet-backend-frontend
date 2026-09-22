@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Validations;
 
@@ -47,6 +48,8 @@ public static class Bootstrap
         ConfigureAuthentication(builder);
 
         ConfigureSwagger(builder);
+
+        ConfigureCache(builder);
 
         return builder;
     }
@@ -148,6 +151,9 @@ public static class Bootstrap
             applicationDbContext.Users.Update(user);
             await applicationDbContext.SaveChangesAsync();
         }
+
+        var hybridCache = scope.ServiceProvider.GetRequiredService<HybridCache>();
+        await hybridCache.RemoveAsync(CacheKeys.SystemAdminUserKey);
     }
 
     public static void ConfigureUsers(WebApplicationBuilder builder)
@@ -368,6 +374,13 @@ public static class Bootstrap
         [
           Assembly.Load("AppProject.Core.Controllers.General"),
         ];
+
+    private static void ConfigureCache(WebApplicationBuilder builder)
+    {
+        builder.Services.AddHybridCache();
+
+        // You can configure IDistributedCache here if needed and connect whith Redis or other cache providers
+    }
 
     private static IEnumerable<Assembly> GetServicesAssemblies() =>
         [
