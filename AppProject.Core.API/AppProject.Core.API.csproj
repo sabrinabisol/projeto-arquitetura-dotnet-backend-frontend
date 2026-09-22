@@ -30,6 +30,8 @@
   <ItemGroup>
     <Folder Include="Auth\" />
     <Folder Include="Bootstraps\" />
+    <Folder Include="Controllers\" />
+    <Folder Include="Controllers\Auth\" />
     <Folder Include="Middleware\" />
   </ItemGroup>
 
