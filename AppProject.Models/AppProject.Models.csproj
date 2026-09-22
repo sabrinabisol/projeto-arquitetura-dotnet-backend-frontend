@@ -3,6 +3,7 @@
     <ProjectReference Include="..\AppProject.Utils\AppProject.Utils.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Auth\" />
     <Folder Include="CustomValidators\" />
   </ItemGroup>
 </Project>
