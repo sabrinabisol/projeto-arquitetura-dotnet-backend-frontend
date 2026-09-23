@@ -18,6 +18,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Validations;
+using Serilog;
 
 namespace AppProject.Core.API.Bootstraps;
 
@@ -91,6 +92,8 @@ public static class Bootstrap
 
         app.UseAuthentication();
         app.UseAuthorization();
+
+        app.UseMiddleware<SerilogUserEnricherMiddleware>();
 
         app.MapControllers();
 
@@ -380,6 +383,18 @@ public static class Bootstrap
         builder.Services.AddHybridCache();
 
         // You can configure IDistributedCache here if needed and connect whith Redis or other cache providers
+    }
+
+    private static void ConfigureLog(WebApplicationBuilder builder)
+    {
+        Log.Logger = new LoggerConfiguration()
+            .ReadFrom.Configuration(builder.Configuration)
+            .Enrich.FromLogContext()
+            .CreateLogger();
+
+        builder.Logging.AddSerilog(Log.Logger);
+
+        // You can configure Application Insights or other logging providers here
     }
 
     private static IEnumerable<Assembly> GetServicesAssemblies() =>

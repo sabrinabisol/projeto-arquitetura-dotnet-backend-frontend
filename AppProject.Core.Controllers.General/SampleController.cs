@@ -6,13 +6,15 @@ using AppProject.Resources;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace AppProject.Core.Controllers.General
 {
     [Route("api/general/[controller]/[action]")]
     [ApiController]
     public class SampleController(
-        IUserContext userContext)
+        IUserContext userContext,
+        ILogger<SampleController> logger)
         : ControllerBase
     {
         [HttpGet]
@@ -57,6 +59,15 @@ namespace AppProject.Core.Controllers.General
                           $"System admin user email: {systemAdminUser.Email}";
 
             return this.Ok(message);
+        }
+
+        [HttpGet]
+        public string GetLogSample()
+        {
+            var logMessage = "This is a sample log message";
+            logger.LogInformation(logMessage);
+
+            return $"Log Message: {logMessage}";
         }
     }
 }
