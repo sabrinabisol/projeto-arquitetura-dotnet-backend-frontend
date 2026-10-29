@@ -9,8 +9,7 @@ namespace AppProject.Core.Infrastructure.Email;
 public class EmailSender(
     ISendGridClient sendGridClient,
     IOptions<SendEmailOptions> sendEmailOptions,
-    ILogger<EmailSender> logger
-) : IEmailSender
+    ILogger<EmailSender> logger) : IEmailSender
 {
     public async Task<bool> SendEmailAsync(
         string subject,

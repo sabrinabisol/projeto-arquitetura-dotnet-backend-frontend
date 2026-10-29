@@ -4,21 +4,25 @@ using System.Reflection;
 using System.Security.Claims;
 using System.Threading.RateLimiting;
 using AppProject.Core.API.Auth;
+using AppProject.Core.API.EmailRenderer;
 using AppProject.Core.API.Middleware;
 using AppProject.Core.Contracts;
 using AppProject.Core.Infrastructure.Database;
 using AppProject.Core.Infrastructure.Database.Entities.Auth;
 using AppProject.Core.Infrastructure.Database.Mapper;
+using AppProject.Core.Infrastructure.Email;
 using AppProject.Core.Services;
 using AppProject.Exceptions;
 using Mapster;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Validations;
+using SendGrid.Extensions.DependencyInjection;
 using Serilog;
 
 namespace AppProject.Core.API.Bootstraps;
@@ -60,6 +64,8 @@ public static class Bootstrap
         ConfigureCors(builder);
 
         ConfigureRateLimiting(builder);
+
+        ConfigureEmail(builder);
 
         return builder;
     }
@@ -445,6 +451,26 @@ public static class Bootstrap
                         QueueLimit = rateOptions.QueueLimit,
                         QueueProcessingOrder = QueueProcessingOrder.OldestFirst
                     }));
+        });
+    }
+
+    private static void ConfigureEmail(WebApplicationBuilder builder)
+    {
+        builder.Services.Configure<SendEmailOptions>(builder.Configuration.GetSection("SendEmail"));
+        builder.Services.AddScoped<IEmailSender, EmailSender>();
+        builder.Services.AddScoped<IEmailTemplateRenderer, EmailTemplateRenderer>();
+        builder.Services.AddSendGrid(options =>
+        {
+            var sendEmailOptions = new SendEmailOptions();
+            builder.Configuration.GetSection("SendEmail").Bind(sendEmailOptions);
+
+            var apiKey = sendEmailOptions.ApiKey;
+            if (string.IsNullOrWhiteSpace(apiKey))
+            {
+                throw new ArgumentException("SendEmail API Key is not configured.");
+            }
+
+            options.ApiKey = apiKey;
         });
     }
 

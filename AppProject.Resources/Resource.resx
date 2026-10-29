@@ -20,7 +20,10 @@
   <data name="Sample_Message_Text" xml:space="preserve">
     <value>Sample</value>
   </data>
-  <data name="NameInfo" xml:space="preserve">
-    <value>Welcome {0}!</value>
+  <data name="Sample_Welcome_Message" xml:space="preserve">
+    <value>Hi, {0}!</value>
+  </data>
+  <data name="SampleEmailTemplate_Body_Message" xml:space="preserve">
+    <value>This is a sample email message for you.</value>
   </data>
 </root>

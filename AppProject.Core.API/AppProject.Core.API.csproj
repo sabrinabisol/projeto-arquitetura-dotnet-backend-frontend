@@ -35,7 +35,12 @@
     <Folder Include="Bootstraps\" />
     <Folder Include="Controllers\" />
     <Folder Include="Controllers\Auth\" />
+    <Folder Include="EmailRenderer\" />
     <Folder Include="Middleware\" />
   </ItemGroup>
+
+  <PropertyGroup>
+    <PreserveCompilationContext>true</PreserveCompilationContext>
+  </PropertyGroup>
 
 </Project>
